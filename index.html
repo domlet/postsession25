@@ -55,57 +55,77 @@
 
   <div class="map-overlay-container">
     <div class="map-overlay">
+      <h1 id="day"></h1>
       <h2 id="location-title"></h2>
+      <h3 id="landmarks"></h3>
       <p id="location-description"></p>
-      <small>Text credit:
-        <a target="_blank" href="http://www.nycgo.com/neighborhoods">nycgo.com</a></small>
+      <button onclick="nextDay()">Next Day</button><br />
+      <small><a target="_blank" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTNw0e583X1cRLA4AZ16hERlCQ80CRZxfdx6vnaCN4kbLwWOxMPM4ZCv8f8xMjNDImd-IcPwE5bEGCN/pubhtml?gid=624153727&single=true">View full itinerary</a></small>
     </div>
   </div>
 
   <script>
-    // TO MAKE THE MAP APPEAR YOU MUST
-    // ADD YOUR ACCESS TOKEN FROM
-    // https://account.mapbox.com
+
+    /*
+    Default map position
+17.87
+
+
+
+    */
+    // Based on example: https://docs.mapbox.com/mapbox-gl-js/example/playback-locations/
     mapboxgl.accessToken = 'pk.eyJ1IjoiZG9tbGV0IiwiYSI6ImNtYXNmd3pkejBtbzMycnB5Z2lxeHV3emoifQ.2eHmSbQvmm9wTT344pyrRQ';
     const map = new mapboxgl.Map({
       container: 'map',
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-74.0315, 40.6989],
-      maxZoom: 16,
+      style: 'mapbox://styles/mapbox/outdoors-v12',
+      center: [-122.193313, 37.761248],
+      zoom: 17.87,
       minZoom: 9,
-      zoom: 9.68
+      bearing: 0.00,
+      pitch: 45.00
     });
 
+    const day = document.getElementById('day');
     const title = document.getElementById('location-title');
     const description = document.getElementById('location-description');
+    const landmarks = document.getElementById('landmarks');
 
     const locations = [
       {
         'id': '2',
-        'title': 'Day 1: Bike the Golden Gate Bridge',
+        'day': 'Day 1 (May 20th)',
+        'title': 'Bike the Golden Gate Bridge',
+        'landmarks': 'Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
         'description':
-          "This is where hip-hop was born, where the Yankees became a dynasty and where you can find New York City's leading zoo and botanical garden.",
+          "An adventurous first day! From Montgomery BART (SF), we will take MUNI #30 bus to Sports Basement (Presidio). There, we will pick up our bikes, locks, and helmets.",
         'camera': {
-          center: [-73.8709, 40.8255],
-          zoom: 12.21,
-          pitch: 50
+
+          center: [-122.46302, 37.81783],
+          zoom: 13,
+          bearing: -14.4,
+          pitch: 55
         }
       },
       {
         'id': '3',
+        'day': 'Day 1 (May 20th)',
         'title': 'Day 2: Bike Angel Island',
+        'landmarks': 'Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
         'description':
-          "No matter how hip it looks on TV, NYC's most populous borough is best experienced in person. Read on to find out about live music, Prospect Park, Nets basketball and more.",
+          "An historic island with abandoned military forts from the Civil War era, and abandoned immigration detention facilities with a history of Chinese exclusion.",
         'camera': {
-          center: [-73.9499, 40.626],
-          bearing: -8.9,
-          zoom: 11.68
+          center: [-122.43429, 37.86285],
+          bearing: 0,
+          zoom: 14,
+          pitch: 47
         }
       },
       {
         'id': '1',
+        'day': 'Day 1 (May 20th)',
         'title': 'Day 3: Bike the Great Highway',
+        'landmarks': 'Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
         'description':
           'Even if you think you know Manhattan—its world-class museums, fine dining and unforgettable views—the borough always has something new and exciting in store.',
         'camera': {
@@ -116,7 +136,9 @@
       },
       {
         'id': '4',
+        'day': 'Day 1 (May 20th)',
         'title': 'Day 4: Bike the Bay Trail (EB)',
+        'landmarks': 'Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
         'description':
           "Taste food from around the globe, watch Mets baseball and US Open tennis, see cutting-edge art and more in one of the world's most diverse places.",
         'camera': {
@@ -127,7 +149,9 @@
       },
       {
         'id': '5',
+        'day': 'Day 1 (May 20th)',
         'title': 'Day 5: Return Bikes & Dim Sum',
+        'landmarks': 'Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
         'description':
           'Take a free ferry ride to an island getaway filled with historic architecture, stunning views, gardens and many family-friendly attractions.',
         'camera': {
@@ -143,31 +167,29 @@
       map.setFilter('highlight', ['==', 'borocode', code]);
     }
 
+    function nextDay() {
+      index = (index + 1) % locations.length;
+      playback(index);
+      console.log("hi")
+    }
     function playback(index) {
+      day.textContent = locations[index].day;
       title.textContent = locations[index].title;
       description.textContent = locations[index].description;
+      landmarks.textContent = locations[index].landmarks;
 
       highlightBorough(locations[index].id ? locations[index].id : '');
 
       // Animate the map position based on camera properties.
       map.flyTo(locations[index].camera);
-
-      map.on('click', () => {
-        index = (index + 1) % locations.length;
-        playback(index);
-
-        // Duration the slide is on screen after interaction.
-        //window.setTimeout(() => {
-        // Increment index, looping back to the first after the last location.
-        //index = (index + 1) % locations.length;
-        //playback(index);
-        //}, 30000); // After callback, show the location for 3 seconds.
-      });
     }
 
     // Display the last title/description first.
+    day.textContent = locations[locations.length - 1].day;
     title.textContent = locations[locations.length - 1].title;
     description.textContent = locations[locations.length - 1].description;
+    landmarks.textContent = locations[locations.length - 1].landmarks;
+
 
     map.on('load', () => {
       map.addSource('boroughs', {
@@ -190,7 +212,34 @@
       );
 
       // Start the playback animation for each borough.
-      playback(0);
+      index = 0
+      playback(index);
+      // add routes (begin)
+      // Define a source before using it to create a new layer
+      map.addSource('day01', {
+        type: 'geojson',
+        data: 'day01.geojson'
+      });
+
+      map.addLayer({
+        id: 'day01',
+        source: 'day01',
+        type: 'line',
+        "paint": {
+          "line-color": "blue",
+          "line-width": 5,
+          "line-dasharray": [1, 1]
+        }
+      });
+      // add routes (end)
+      // https://docs.mapbox.com/mapbox-gl-js/example/add-terrain/
+      map.addSource('mapbox-dem', {
+        'type': 'raster-dem',
+        'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        'tileSize': 512,
+        'maxzoom': 14
+      });
+      map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 2.5 });
     });
   </script>
 
