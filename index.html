@@ -66,7 +66,7 @@
     // TO MAKE THE MAP APPEAR YOU MUST
     // ADD YOUR ACCESS TOKEN FROM
     // https://account.mapbox.com
-    mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZG9tbGV0IiwiYSI6ImNtYXNmd3pkejBtbzMycnB5Z2lxeHV3emoifQ.2eHmSbQvmm9wTT344pyrRQ';
     const map = new mapboxgl.Map({
       container: 'map',
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
@@ -152,13 +152,16 @@
       // Animate the map position based on camera properties.
       map.flyTo(locations[index].camera);
 
-      map.once('moveend', () => {
+      map.on('click', () => {
+        index = (index + 1) % locations.length;
+        playback(index);
+
         // Duration the slide is on screen after interaction.
-        window.setTimeout(() => {
-          // Increment index, looping back to the first after the last location.
-          index = (index + 1) % locations.length;
-          playback(index);
-        }, 3000); // After callback, show the location for 3 seconds.
+        //window.setTimeout(() => {
+        // Increment index, looping back to the first after the last location.
+        //index = (index + 1) % locations.length;
+        //playback(index);
+        //}, 30000); // After callback, show the location for 3 seconds.
       });
     }
 
