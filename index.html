@@ -59,7 +59,7 @@
       <h2 id="location-title"></h2>
       <h3 id="landmarks"></h3>
       <p id="location-description"></p>
-      <button onclick="nextDay()">Next Day</button><br />
+      <button onclick="nextDay(index)">Next Day</button><br />
       <small><a target="_blank" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTNw0e583X1cRLA4AZ16hERlCQ80CRZxfdx6vnaCN4kbLwWOxMPM4ZCv8f8xMjNDImd-IcPwE5bEGCN/pubhtml?gid=624153727&single=true">View full itinerary</a></small>
     </div>
   </div>
@@ -167,12 +167,49 @@
       map.setFilter('highlight', ['==', 'borocode', code]);
     }
 
-    function nextDay() {
+    function nextDay(index) {
       index = (index + 1) % locations.length;
       playback(index);
-      console.log("hi")
     }
     function playback(index) {
+
+      // add routes (begin)
+      // Define a source before using it to create a new layer
+      if (index == 0) {
+        map.addSource('day01', {
+          type: 'geojson',
+          data: 'day01.geojson'
+        });
+        map.addLayer({
+          id: 'day01',
+          source: 'day01',
+          type: 'line',
+          "paint": {
+            "line-color": "blue",
+            "line-width": 5,
+            "line-dasharray": [1, 1]
+          }
+        });
+      } else if (index == 1) {
+        map.addSource('day02', {
+          type: 'geojson',
+          data: 'day02.geojson'
+        });
+        map.addLayer({
+          id: 'day02',
+          source: 'day02',
+          type: 'line',
+          "paint": {
+            "line-color": "blue",
+            "line-width": 5,
+            "line-dasharray": [1, 1]
+          }
+        });
+
+      }
+      // add routes (end)
+
+
       day.textContent = locations[index].day;
       title.textContent = locations[index].title;
       description.textContent = locations[index].description;
@@ -214,24 +251,7 @@
       // Start the playback animation for each borough.
       index = 0
       playback(index);
-      // add routes (begin)
-      // Define a source before using it to create a new layer
-      map.addSource('day01', {
-        type: 'geojson',
-        data: 'day01.geojson'
-      });
 
-      map.addLayer({
-        id: 'day01',
-        source: 'day01',
-        type: 'line',
-        "paint": {
-          "line-color": "blue",
-          "line-width": 5,
-          "line-dasharray": [1, 1]
-        }
-      });
-      // add routes (end)
       // https://docs.mapbox.com/mapbox-gl-js/example/add-terrain/
       map.addSource('mapbox-dem', {
         'type': 'raster-dem',
