@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Play map locations as a slideshow</title>
+  <title>Bike the Bay (Postsession 2025)</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
@@ -18,6 +18,7 @@
       top: 0;
       bottom: 0;
       width: 100%;
+      height: 100vh;
     }
   </style>
 </head>
@@ -29,26 +30,11 @@
       bottom: 0;
       left: 0;
       width: 100%;
-
-      /* 30% of the viewport height */
-      background-color: rgba(0, 0, 0, 0.8);
-      /* semi-transparent background */
       z-index: 1000;
-      /* ensures it overlays other content */
       display: flex;
       align-items: center;
       justify-content: center;
-
-      /*      
-  color: white;
-      position: absolute;
-      width: 25%;
-      top: 0;
-      left: 0;
-      padding: 10px;
-      z-index: 1;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      */
+      height: 30vh;
     }
 
     .map-overlay {
@@ -67,6 +53,22 @@
     .map-overlay p {
       margin: 0 0 10px;
     }
+
+    .buttons-container {
+      text-align: center;
+    }
+
+    button {
+      width: 10vh;
+      font-size: 2em;
+      border-radius: 0.5em;
+      ;
+    }
+
+    h1 {
+      margin: 0;
+      padding: 0;
+    }
   </style>
 
   <div id="map"></div>
@@ -75,9 +77,14 @@
     <div class="map-overlay">
       <h1 id="location-title"></h1>
       <h3 id="landmarks"></h3>
-      <p id="location-description"></p>
-      <button onclick="nextDay()">Next Day</button><br />
-      <small><a target="_blank" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTNw0e583X1cRLA4AZ16hERlCQ80CRZxfdx6vnaCN4kbLwWOxMPM4ZCv8f8xMjNDImd-IcPwE5bEGCN/pubhtml?gid=624153727&single=true">View full itinerary</a></small>
+      <div class='buttons-container'>
+        <button onclick=" showDay(0)">1</button>
+        <button onclick="showDay(1)">2</button>
+        <button onclick="showDay(2)">3</button>
+        <button onclick="showDay(3)">4</button>
+        <button onclick="showDay(4)">5</button>
+        <small><a target="_blank" href="https://docs.google.com/spreadsheets/d/e/2PACX-1vTNw0e583X1cRLA4AZ16hERlCQ80CRZxfdx6vnaCN4kbLwWOxMPM4ZCv8f8xMjNDImd-IcPwE5bEGCN/pubhtml?gid=624153727&single=true">Details</a></small>
+      </div>
     </div>
   </div>
 
@@ -93,24 +100,24 @@
       zoom: 17.87,
       minZoom: 9,
       bearing: 0.00,
-      pitch: 45.00
+      pitch: 45.00,
+      attributionControl: false,
+      logoPosition: 'top-left'
     });
 
+
     const title = document.getElementById('location-title');
-    const description = document.getElementById('location-description');
     const landmarks = document.getElementById('landmarks');
 
     const locations = [
       {
         'id': '1',
-        'title': 'Day 1: Bike the Golden Gate Bridge',
+        'title': 'Day 1: Bike the GG Bridge',
         'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
-        'description':
-          "An adventurous first day! From Montgomery BART (SF), we will take MUNI #30 bus to Sports Basement (Presidio). There, we will pick up our bikes, locks, and helmets.",
         'camera': {
 
           center: [-122.46302, 37.81783],
-          zoom: 13,
+          zoom: 12.2,
           bearing: -14.4,
           pitch: 55
         }
@@ -119,8 +126,6 @@
         'id': '2',
         'title': 'Day 2: Bike Angel Island',
         'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
-        'description':
-          "An historic island with abandoned military forts from the Civil War era, and abandoned immigration detention facilities with a history of Chinese exclusion.",
         'camera': {
           center: [-122.43429, 37.86285],
           bearing: 0,
@@ -132,8 +137,6 @@
         'id': '3',
         'title': 'Bike the Great Highway',
         'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
-        'description':
-          'Even if you think you know Manhattan—its world-class museums, fine dining and unforgettable views—the borough always has something new and exciting in store.',
         'camera': {
           center: [-122.47732, 37.76665],
           pitch: 45,
@@ -144,8 +147,6 @@
         'id': '4',
         'title': 'Day 4: Bike the Bay Trail (EB)',
         'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
-        'description':
-          "Taste food from around the globe, watch Mets baseball and US Open tennis, see cutting-edge art and more in one of the world's most diverse places.",
         'camera': {
           center: [-73.8432, 40.6923],
           bearing: 36,
@@ -156,8 +157,6 @@
         'id': '5',
         'title': 'Day 5: Return Bikes & Dim Sum',
         'landmarks': 'Points of Interest: Starbucks (Estuary Cove), Brooklyn Basin, Oakland Ferry Terminal, Sports Basement Presidio, Washington Square Park, Portsmouth Square, Hang Ah Dim Sum',
-        'description':
-          'On our last day, we will bike from CCPA to the Oakland Ferry Terminal, and take the ferry to SF. We will ride to the Presidio and return our bikes at Sports Basement. Then, we will take a bus to North Beach (Washington Square Park) and walk to Chinatown, which is an adjacent neighborhood. We will eat a Chinese Dim Sum lunch at Hang Ah Restaurant.',
         'camera': {
           center: [-74.1991, 40.5441],
           bearing: 28.4,
@@ -171,14 +170,13 @@
       map.setFilter('highlight', ['==', 'borocode', code]);
     }
 
-    function nextDay() {
-      index = (index + 1) % locations.length;
+    function showDay(index) {
+      // index = (index + 1) % locations.length;
       playback(index);
       console.log(index);
     }
     function playback(index) {
       title.textContent = locations[index].title;
-      description.textContent = locations[index].description;
       landmarks.textContent = locations[index].landmarks;
 
       // highlightBorough(locations[index].id ? locations[index].id : '');
@@ -187,9 +185,8 @@
       map.flyTo(locations[index].camera);
     }
 
-    // Display the last title/description first.
+    // Display the last item first.
     title.textContent = locations[locations.length - 1].title;
-    description.textContent = locations[locations.length - 1].description;
     landmarks.textContent = locations[locations.length - 1].landmarks;
 
 
@@ -237,7 +234,8 @@
     // Start the playback animation for each borough.
     index = 0
     playback(index);
-
+    // Add zoom and rotation controls
+    map.addControl(new mapboxgl.NavigationControl());
   </script>
 
 </body>
