@@ -29,7 +29,6 @@
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -38,6 +37,7 @@
     }
 
     .map-overlay {
+      width: 100%;
       font:
         12px/20px 'Helvetica Neue',
         Arial,
@@ -62,12 +62,35 @@
       width: 10vh;
       font-size: 2em;
       border-radius: 0.5em;
-      ;
+      margin: 0 0.1em;
+      height: 1.8em;
+      background-color: black;
+      color: #fff;
+      font-weight: bold;
+      border: 3px solid white;
     }
 
     h1 {
       margin: 0;
       padding: 0;
+    }
+
+    :active {
+      background-color: #0d3a29;
+      color: #df9f58;
+      border-color: #df9f58;
+    }
+
+    :focus {
+      background-color: #0d3a29;
+      color: #df9f58;
+      border-color: #df9f58;
+    }
+
+    :target {
+      background-color: #0d3a29;
+      color: #df9f58;
+      border-color: #df9f58;
     }
   </style>
 
@@ -113,7 +136,7 @@
       {
         'id': '1',
         'title': 'Day 1: Bike the GG Bridge',
-        'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
+        'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point',
         'camera': {
 
           center: [-122.46302, 37.81783],
@@ -125,7 +148,7 @@
       {
         'id': '2',
         'title': 'Day 2: Bike Angel Island',
-        'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
+        'landmarks': 'Points of Interest: SF Ferry Terminal, Immigration Museum, Camp Reynolds Hospital, Quarry Beach, Fort McDowell (East Garrison), Camp Reynolds (West Garrison).',
         'camera': {
           center: [-122.43429, 37.86285],
           bearing: 0,
@@ -136,31 +159,31 @@
       {
         'id': '3',
         'title': 'Bike the Great Highway',
-        'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
+        'landmarks': 'Points of Interest: The Panhandle, Golden Gate Park, DeYoung Museum, Great Highway, Lake Merced, Stonestown Mall.',
         'camera': {
-          center: [-122.47732, 37.76665],
-          pitch: 45,
-          zoom: 1
+          center: [-122.50267, 37.75122],
+          pitch: 55,
+          zoom: 11.5
         }
       },
       {
         'id': '4',
         'title': 'Day 4: Bike the Bay Trail (EB)',
-        'landmarks': 'Points of Interest: Sports Basement Presidio, Crissy Field, Palace of Fine Arts, Golden Gate Bridge, Vista Point, Montgomery BART',
+        'landmarks': 'Points of Interest: Norh Berkeley BART, Seabreeze Cafe, McLaughlin Eastshore S.P., SF Bay Trail, Tom Bates Field, Albany Bulb, Bay Street Mall, West Oakland BART.',
         'camera': {
-          center: [-73.8432, 40.6923],
-          bearing: 36,
-          zoom: 11.37
+          center: [-122.28666, 37.82462],
+          pitch: 47,
+          zoom: 13
         }
       },
       {
         'id': '5',
         'title': 'Day 5: Return Bikes & Dim Sum',
-        'landmarks': 'Points of Interest: Starbucks (Estuary Cove), Brooklyn Basin, Oakland Ferry Terminal, Sports Basement Presidio, Washington Square Park, Portsmouth Square, Hang Ah Dim Sum',
+        'landmarks': 'Points of Interest: Starbucks (Estuary Cove), Brooklyn Basin, Oakland Ferry Terminal, Sports Basement Presidio, Washington Square Park, Portsmouth Square, Hang Ah Tea Room.',
         'camera': {
-          center: [-74.1991, 40.5441],
-          bearing: 28.4,
-          zoom: 11.64
+          center: [-122.40205, 37.79385],
+          pitch: 25,
+          zoom: 13
         }
       }
     ];
@@ -169,9 +192,44 @@
       // Only show the polygon feature that corresponds to `borocode` in the data.
       map.setFilter('highlight', ['==', 'borocode', code]);
     }
-
+    // hide layers unless user clicked that day
     function showDay(index) {
-      // index = (index + 1) % locations.length;
+      if (index == 0) {
+        map.setLayoutProperty('day01', 'visibility', 'visible');
+        map.setLayoutProperty('day02', 'visibility', 'none');
+        map.setLayoutProperty('day03', 'visibility', 'none');
+        map.setLayoutProperty('day04', 'visibility', 'none');
+        map.setLayoutProperty('day05-1', 'visibility', 'none');
+        map.setLayoutProperty('day05-2', 'visibility', 'none');
+      } else if (index == 1) {
+        map.setLayoutProperty('day01', 'visibility', 'none');
+        map.setLayoutProperty('day02', 'visibility', 'visible');
+        map.setLayoutProperty('day03', 'visibility', 'none');
+        map.setLayoutProperty('day04', 'visibility', 'none');
+        map.setLayoutProperty('day05-1', 'visibility', 'none');
+        map.setLayoutProperty('day05-2', 'visibility', 'none');
+      } else if (index == 2) {
+        map.setLayoutProperty('day01', 'visibility', 'none');
+        map.setLayoutProperty('day02', 'visibility', 'none');
+        map.setLayoutProperty('day03', 'visibility', 'visible');
+        map.setLayoutProperty('day04', 'visibility', 'none');
+        map.setLayoutProperty('day05-1', 'visibility', 'none');
+        map.setLayoutProperty('day05-2', 'visibility', 'none');
+      } else if (index == 3) {
+        map.setLayoutProperty('day01', 'visibility', 'none');
+        map.setLayoutProperty('day02', 'visibility', 'none');
+        map.setLayoutProperty('day03', 'visibility', 'none');
+        map.setLayoutProperty('day04', 'visibility', 'visible');
+        map.setLayoutProperty('day05-1', 'visibility', 'none');
+        map.setLayoutProperty('day05-2', 'visibility', 'none');
+      } else {
+        map.setLayoutProperty('day01', 'visibility', 'none');
+        map.setLayoutProperty('day02', 'visibility', 'none');
+        map.setLayoutProperty('day03', 'visibility', 'none');
+        map.setLayoutProperty('day04', 'visibility', 'none');
+        map.setLayoutProperty('day05-1', 'visibility', 'visible');
+        map.setLayoutProperty('day05-2', 'visibility', 'visible');
+      }
       playback(index);
       console.log(index);
     }
@@ -191,10 +249,32 @@
 
 
     map.on('load', () => {
+      // add route line sources
       map.addSource('day01', {
         type: 'geojson',
         data: 'day01.geojson'
       });
+      map.addSource('day02', {
+        type: 'geojson',
+        data: 'day02.geojson'
+      });
+      map.addSource('day03', {
+        type: 'geojson',
+        data: 'day03.geojson'
+      });
+      map.addSource('day04', {
+        type: 'geojson',
+        data: 'day04.geojson'
+      });
+      map.addSource('day05-1', {
+        type: 'geojson',
+        data: 'day05-1.geojson'
+      });
+      map.addSource('day05-2', {
+        type: 'geojson',
+        data: 'day05-2.geojson'
+      });
+      // add route line layers
       map.addLayer({
         id: 'day01',
         source: 'day01',
@@ -205,14 +285,65 @@
           "line-dasharray": [1, 1]
         }
       });
-      map.addSource('day02', {
-        type: 'geojson',
-        data: 'day02.geojson'
-      });
       map.addLayer({
         id: 'day02',
         source: 'day02',
         type: 'line',
+        "layout": {
+          visibility: 'none'
+        },
+        "paint": {
+          "line-color": "blue",
+          "line-width": 5,
+          "line-dasharray": [1, 1],
+        }
+      });
+      map.addLayer({
+        id: 'day03',
+        source: 'day03',
+        type: 'line',
+        "layout": {
+          visibility: 'none'
+        },
+        "paint": {
+          "line-color": "blue",
+          "line-width": 5,
+          "line-dasharray": [1, 1]
+        }
+      });
+      map.addLayer({
+        id: 'day04',
+        source: 'day04',
+        type: 'line',
+        "layout": {
+          visibility: 'none'
+        },
+        "paint": {
+          "line-color": "blue",
+          "line-width": 5,
+          "line-dasharray": [1, 1]
+        }
+      });
+      map.addLayer({
+        id: 'day05-1',
+        source: 'day05-1',
+        type: 'line',
+        "layout": {
+          visibility: 'none'
+        },
+        "paint": {
+          "line-color": "blue",
+          "line-width": 5,
+          "line-dasharray": [1, 1]
+        }
+      });
+      map.addLayer({
+        id: 'day05-2',
+        source: 'day05-2',
+        type: 'line',
+        "layout": {
+          visibility: 'none'
+        },
         "paint": {
           "line-color": "blue",
           "line-width": 5,
@@ -233,9 +364,12 @@
 
     // Start the playback animation for each borough.
     index = 0
+
+
     playback(index);
     // Add zoom and rotation controls
     map.addControl(new mapboxgl.NavigationControl());
+
   </script>
 
 </body>
