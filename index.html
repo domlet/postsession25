@@ -25,6 +25,16 @@
 
 <body>
   <style>
+    .styles-container {
+      position: fixed;
+      top: 0.5em;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
     .map-overlay-container {
       position: fixed;
       bottom: 0;
@@ -34,6 +44,7 @@
       align-items: center;
       justify-content: center;
       height: 30vh;
+      width: 100%;
     }
 
     .map-overlay {
@@ -87,6 +98,11 @@
   </style>
 
   <div id="map"></div>
+
+  <!-- <div class="styles-container">
+    <button onclick=" switchStyle('outdoors')">Outdoors</button>
+    <button onclick="switchStyle('satellite')">Satellite</button>
+  </div> -->
 
   <div class="map-overlay-container">
     <div class="map-overlay">
@@ -165,7 +181,7 @@
         'camera': {
           center: [-122.28666, 37.82462],
           pitch: 47,
-          zoom: 13
+          zoom: 12.5
         }
       },
       {
@@ -173,9 +189,10 @@
         'title': 'Day 5: Return Bikes & Dim Sum',
         'landmarks': 'Points of Interest: Starbucks (Estuary Cove), Brooklyn Basin, Oakland Ferry Terminal, Sports Basement Presidio, Washington Square Park, Portsmouth Square, Hang Ah Tea Room.',
         'camera': {
-          center: [-122.40205, 37.79385],
-          pitch: 25,
-          zoom: 13
+          center: [-122.3273, 37.7664],
+          bearing: 9.6,
+          pitch: 49,
+          zoom: 10.87
         }
       }
     ];
@@ -223,7 +240,16 @@
         map.setLayoutProperty('day05-2', 'visibility', 'visible');
       }
       playback(index);
-      console.log(index);
+      console.log('index is ' + index);
+    }
+    function switchStyle(style) {
+      if (style == 'outdoors') {
+        map.setStyle('mapbox://styles/mapbox/outdoors-v12');
+        showDay(index);
+      } else {
+        map.setStyle('mapbox://styles/mapbox/satellite-streets-v12');
+        showDay(index);
+      }
     }
     function playback(index) {
       title.textContent = locations[index].title;
